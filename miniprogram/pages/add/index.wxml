@@ -1,20 +1,20 @@
-<wxs module="util" src="../util.wxs" />
+<!-- <wxs module="util" src="../util.wxs" />
 <view class="container" style="margin-bottom: 100px">
   <view class="form-group">
     <view class="form-cell">
-      <view class="form-cell_title">导尿计划</view>
-      <input class="form-cell_input" placeholder="请输入待办事项（10字以内）" placeholder-class="form-cell_title-placeholder" bindinput="onTitleInput" value="{{title}}" />
+      <view class="form-cell_title">计划名称</view>
+      <input class="form-cell_input" placeholder="请输入计划名称（10字以内）" placeholder-class="form-cell_title-placeholder" bindinput="onTitleInput" value="{{title}}" />
     </view>
     <view class="form-cell">
       <view class="form-cell_title">详细描述</view>
-      <input class="form-cell_input" placeholder="请输入详细描述（100字以内）" placeholder-class="form-cell_title-placeholder" bindinput="onDescInput" value="{{desc}}" />
+      <input class="form-cell_input" placeholder="请输入计划的详细描述（100字以内）" placeholder-class="form-cell_title-placeholder" bindinput="onDescInput" value="{{desc}}" />
     </view>
   </view>
   <view class="form-group">
     <view class="form-cell inline">
       <view>总饮水量</view>
       <picker class="option" bindchange="onChooseWaterTotal" range="{{totalWaterOptions}}">
-        {{totalWaterOptions[waterTotal]}}
+        {{totalWaterOptions[waterTotalIndex]}}
       </picker>
       <picker class="selector" bindchange="onChooseWaterTotal" range="{{totalWaterOptions}}">
         <image class="selector" src="../../images/add/next.png" />
@@ -35,7 +35,7 @@
       <view>自定义时间</view>
       <mp-cells title="复选列表项" style="width: 100%">
         <mp-checkbox-group ext-class="customIntervalsGroup" prop="checkbox" multi="{{true}}" bindchange="customIntervalChange">
-          <mp-checkbox style="display: inline-block;width: 33%;" ext-class="customIntervalsCheckbox" wx:for="{{customIntervalItems}}" wx:key="{{item.value}}" label="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"></mp-checkbox>
+          <mp-checkbox style="display: inline-block;width: 33%;" ext-class="customIntervalsCheckbox" wx:for="{{customIntervalItems}}" wx:key="value" label="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"></mp-checkbox>
         </mp-checkbox-group>
       </mp-cells>
     </view>
@@ -68,4 +68,10 @@
     <view class="reset" bindtap="resetTodo">重置</view>
     <view class="save" bindtap="saveTodo">保存</view>
   </view>
-</view>
+</view> -->
+<TodoDetail data="{{undefined}}" class=".todoDetail">
+  <view slot="actions" class="footer">
+    <view class="reset" bindtap="resetTodo">重置</view>
+    <view class="save" bindtap="saveTodo">保存</view>
+  </view>
+</TodoDetail>

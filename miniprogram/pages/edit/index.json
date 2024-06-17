@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
-  "navigationBarTitleText": "编辑待办"
+  "usingComponents": {
+    "TodoDetail": "/components/TodoDetail"
+  },
+  "navigationBarTitleText": "编辑计划"
 }

@@ -1,18 +1,46 @@
 /* 待办重新编辑页面 */
+const DefaultDrink = {
+  7: 200,
+  9: 300,
+  12: 200,
+  15: 300,
+  18: 200,
+  20: 300,
+}
+const initData = {
+  _id: '',
+  title: '',
+  desc: '',
+  files: [],
+  fileName: '',
+  freqOptions: ['未完成', '已完成'],
+  // totalWaterOptions: ['2000毫升', '2500毫升', '3000毫升'],
+  // intervalsReminderOptions: ['1 小时', '2 小时', '3 小时', '自定义'],
+  freq: 0, // 这三个都是index
+  // waterTotalIndex: 0,
+  // intervalsIndex: 0,
+  customIntervalItems: Array.from({ length: 24 }, (v, i) => ({
+    name: `${i + 1} 点`,
+    value: i + 1,
+    checked: DefaultDrink[i+1] ? true : false,
+    targetDrink: DefaultDrink[i+1] || '', // 这个时间段的目标饮水量. 默认有6次，早中晚饭各 200ml， 中间穿插3次，每次 400ml
+    actualDrink: '', // 这个时间段的实际饮水量
+    actualPee: '', // 这个时间段的实际排尿量
+  })),
+}
 
 Page({
+  getChildComponent: function () {
+    const childData = this.selectComponent('.todoDetail');
+    return childData;
+  },
   // 类似 add 页面，存储正在编辑的待办信息
   data: {
-    _id: '',
-    title: '',
-    desc: '',
-    files: [],
-    fileName: '',
-    freqOptions: ['未完成', '已完成'],
-    freq: 0
+    ...initData
   },
 
   async onLoad(options) {
+    const childData = this.getChildComponent()
     // 根据上一页传来的 _id 值更新表单数据
     if (options.id !== undefined) {
       this.setData({
@@ -34,68 +62,19 @@ Page({
         }
         // 如果整体文件名字符串过长则整体截断
         fileName = fileName.substr(0, 20) + (fileName.length > 20 ? "..." : "")
-        // 更新页面显示
-        this.setData({
+
+        childData.setDetailData({
+          ...initData,
+          _id: this.data._id,
           title: todo.title,
           desc: todo.desc,
           files: todo.files,
           fileName,
-          freq: todo.freq
+          freq: todo.freq,
+          record: todo.record,
         })
       })
     }
-  },
-
-  //输入响应函数
-  onTitleInput(e) {
-    this.setData({
-      title: e.detail.value
-    })
-  },
-
-  onDescInput(e) {
-    this.setData({
-      desc: e.detail.value
-    })
-  },
-
-  // 添加文件附件
-  addFile() {
-    // 如果文件过多则进行提示
-    if (this.data.files.length + 1 > getApp().globalData.fileLimit) {
-      wx.showToast({
-        title: '数量达到上限',
-        icon: 'error',
-        duration: 2000
-      })
-    }
-    // 调用接口选择文件
-    wx.chooseMessageFile({
-      count: 1
-    }).then(res => {
-      // 将选择结果中的临时文件上传到云存储
-      const file = res.tempFiles[0]
-      getApp().uploadFile(file.name, file.path).then(res => {
-        // 存储已上传的文件名、文件大小及其 id
-        this.data.files.push({
-          name: file.name,
-          size: (file.size / 1024 / 1024).toFixed(2),
-          id: res.fileID
-        })
-        // 更新显示
-        this.setData({
-          files: this.data.files,
-          fileName: this.data.fileName + file.name + ' '
-        })
-      })
-    })
-  },
-
-  // 表单、跳转响应函数
-  onChooseFreq(e) {
-    this.setData({
-      freq: e.detail.value
-    })
   },
 
   // 删除待办事项
@@ -119,8 +98,10 @@ Page({
 
   // 保存待办信息
   async saveTodo() {
+    const data = this.getChildComponent().data
+    console.log('data ----', data)
     // 对输入框内容进行校验
-    if (this.data.title === '') {
+    if (data.title === '') {
       wx.showToast({
         title: '事项标题未填写',
         icon: 'error',
@@ -128,7 +109,7 @@ Page({
       })
       return
     }
-    if (this.data.title.length > 10) {
+    if (data.title.length > 10) {
       wx.showToast({
         title: '事项标题过长',
         icon: 'error',
@@ -136,7 +117,7 @@ Page({
       })
       return
     }
-    if (this.data.desc.length > 100) {
+    if (data.desc.length > 100) {
       wx.showToast({
         title: '事项描述过长',
         icon: 'error',
@@ -149,14 +130,19 @@ Page({
     db.collection(getApp().globalData.collection).where({
       _id: this.data._id
     }).update({
-      data: {
-        title: this.data.title,
-        desc: this.data.desc,
-        files: this.data.files,
-        freq: Number(this.data.freq)
-      }
+      data
     }).then(() => {
       // 待办更新后，返回详情页
+      wx.navigateBack({
+        delta: 0,
+      })
+    }).catch(err => {
+      console.log(err)
+      wx.showToast({
+        title: '保存失败，请稍后重试',
+        icon: 'error',
+        duration: 2000
+      })
       wx.navigateBack({
         delta: 0,
       })

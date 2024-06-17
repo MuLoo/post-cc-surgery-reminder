@@ -2,3 +2,4 @@ node_modules
 dist
 log
 miniprogram_npm
+.DS_Store
