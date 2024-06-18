@@ -5,6 +5,7 @@ App({
     this.globalData = {
       // 用于存储待办记录的集合名称
       collection: 'todo',
+      collection_daily: 'daily',
       // 最大文件上传数量
       fileLimit: 2
     }
@@ -43,7 +44,7 @@ App({
       } else { // 如果文件中 envlist 不存在，提示要配置环境
         this.cloud = () => {
           wx.showModal({
-            content: '当前小程序没有配置云开发环境，请在 envList.js 中配置你的云开发环境', 
+            content: '当前小程序没有配置云开发环境，请在 envList.js 中配置你的云开发环境',
             showCancel: false
           })
           throw new Error('当前小程序没有配置云开发环境，请在 envList.js 中配置你的云开发环境')

@@ -79,21 +79,34 @@
 .header-row .van-col {
   color: grey;
   font-size: 15px;
+  text-align: center;
 }
 .header-content .van-cell {
   /* padding: 0;
   border-bottom: 1px solid #f7f7f7; */
-  padding: 0
+  padding: 0;
+  text-align: center;
+}
+.header-content .van-checkbox {
+  justify-content: center;
 }
 
 .header-content .van-cell .van-field__body input {
   text-align: center;
 }
 
+.input-has-value input {
+  font-size: 18px;
+}
+
 .ml {
   display:inline-block;
   font-size: 14px;
-  color: grey;
+  color: lightgray;
   vertical-align: super;
   height: 24px;
+}
+
+.van-checkbox-group .van-checkbox {
+  padding: 10px;
 }

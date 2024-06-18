@@ -7,7 +7,7 @@ Page({
     todo: {
       title: ''
     },
-    freqOptions: ['未完成', '已完成'],
+    statusOptions: ['未完成', '已完成'],
   },
 
   onLoad(options) {
@@ -45,7 +45,7 @@ Page({
       url: '../file/index?id=' + this.data._id,
     })
   },
-  
+
   toEditPage() {
     wx.navigateTo({
       url: '../edit/index?id=' + this.data._id,

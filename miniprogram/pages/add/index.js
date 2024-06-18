@@ -10,10 +10,10 @@ Page({
     // desc: '',
     // files: [],
     // fileName: '',
-    // freqOptions: ['未完成', '已完成'],
+    // statusOptions: ['未完成', '已完成'],
     // totalWaterOptions: ['2000毫升', '2500毫升', '3000毫升'],
     // intervalsReminderOptions: ['1 小时', '2 小时', '3 小时', '自定义'],
-    // freq: 0, // 这三个都是index
+    // status: 0, // 这三个都是index
     // waterTotalIndex: 0,
     // intervals: 0,
     // customIntervalItems: Array.from({ length: 24 }, (v, i) => ({
@@ -73,7 +73,7 @@ Page({
   // // 响应计划状态选择器
   // onChooseFreq(e) {
   //   this.setData({
-  //     freq: e.detail.value,
+  //     status: e.detail.value,
   //   })
   // },
   // // 选择总饮水量

@@ -45,32 +45,49 @@
       <view>计划详情</view>
       <view style="color: lightgrey; font-size: 14px;">以下饮水量、排尿量等单位均为毫升</view>
       <van-row class="header-row">
-        <van-col span="3">提醒</van-col>
-        <van-col span="3">时间</van-col>
-        <van-col span="6">目标饮水量</van-col>
-        <van-col span="6">实际饮水量</van-col>
-        <van-col span="6">实际排尿量</van-col>
+        <van-col span="4">提醒</van-col>
+        <van-col span="4">时间</van-col>
+        <van-col span="8">目标饮水量</van-col>
+        <van-col span="8">实际饮水量</van-col>
+        <!-- <van-col span="6">实际排尿量</van-col> -->
       </van-row>
       <van-row class="header-content" wx:for="{{record}}" wx:key="value">
-        <van-col span="3">
-          <van-checkbox style="margin-top: 2px" value="{{ item.checked }}" data-extra-param="{{ item }}" bind:change="changeCheckbox"></van-checkbox>
+        <van-col span="4">
+          <van-checkbox style="margin-top: 2px;" extra-class="header-checkbox" value="{{ item.checked }}" data-extra-param="{{ item }}" bind:change="changeCheckbox"></van-checkbox>
         </van-col>
-        <van-col span="3">
+        <van-col span="4">
           <view class="custom-class van-cell van-cell--borderless">{{ item.name }}</view>
         </van-col>
-        <van-col span="6">
-          <van-field maxlength="3" style="width: {{ item.targetDrink ? '60%' : '100%' }}; display: {{ item.targetDrink ? 'inline-block' : 'inherit'}};" value="{{ item.targetDrink }}" type="number" placeholder="目标饮水量" border="{{ false }}" data-extra-param="{{ item }}" bind:change="changeTargetDrink" />
+        <van-col span="8">
+          <van-field disabled="{{editMode}}" class="{{item.targetDrink ? 'input-has-value' : ''}}" maxlength="3" style="width: {{ item.targetDrink ? '60%' : '100%' }}; display: {{ item.targetDrink ? 'inline-block' : 'inherit'}};" value="{{ item.targetDrink }}" type="number" placeholder="目标饮水量" border="{{ false }}" data-extra-param="{{ item }}" bind:change="changeTargetDrink" />
           <view class="ml" wx:if="{{item.targetDrink}}">ML</view>
         </van-col>
-        <van-col span="6">
-          <van-field maxlength="3" style="width: {{ item.actualDrink ? '60%' : '100%' }}; display: {{ item.actualDrink ? 'inline-block' : 'inherit'}};" value="{{ item.actualDrink }}" type="number" placeholder="实际饮水量" border="{{ false }}" data-extra-param="{{ item }}" bind:change="changeActualDrink" />
+        <van-col span="8">
+          <van-field disabled="{{!editMode}}" class="{{item.actualDrink ? 'input-has-value' : ''}}" maxlength="3" style="width: {{ item.actualDrink ? '60%' : '100%' }}; display: {{ item.actualDrink ? 'inline-block' : 'inherit'}};" value="{{ item.actualDrink }}" type="number" placeholder="实际饮水量" border="{{ false }}" data-extra-param="{{ item }}" bind:change="changeActualDrink" />
           <view class="ml" wx:if="{{item.actualDrink}}">ML</view>
         </van-col>
-        <van-col span="6">
+        <!-- <van-col span="6">
           <van-field maxlength="3" style="width: {{ item.actualPee ? '60%' : '100%' }}; display: {{ item.actualPee ? 'inline-block' : 'inherit'}};" value="{{ item.actualPee }}" type="number" placeholder="实际排尿量" border="{{ false }}" data-extra-param="{{ item }}" bind:change="changeActualPee" />
           <view class="ml" wx:if="{{item.actualPee}}">ML</view>
-        </van-col>
+        </van-col> -->
       </van-row>
+    </view>
+  </view>
+  <view class="form-group">
+    <view class="form-cell inline">
+      <view>提醒频率</view>
+      <picker class="option" bindchange="onChooseIntervals" range="{{intervalsReminderOptions}}">
+        {{intervalsReminderOptions[intervalsIndex]}}
+      </picker>
+      <picker class="selector" bindchange="onChooseIntervals" range="{{intervalsReminderOptions}}">
+        <image class="selector" src="../../images/add/next.png" />
+      </picker>
+    </view>
+    <view class="form-cell inline" wx:if="{{ intervalsIndex === 2}}" style="flex-direction: column;align-items: baseline;">
+      <view style="margin-bottom: 10px;">自定义时间</view>
+      <van-checkbox-group value="{{selectdDaily}}" bind:change="onChangeCustomDaily" wx:for="{{customDaily}}" wx:key="item">
+        <van-checkbox name="{{ item}}">{{ item }}</van-checkbox>
+      </van-checkbox-group>
     </view>
   </view>
   <view class="form-group">
@@ -89,10 +106,10 @@
     </view> -->
     <view class="form-cell inline">
       <view>事件状态</view>
-      <picker class="option" bindchange="onChooseFreq" range="{{freqOptions}}">
-        {{freqOptions[freq]}}
+      <picker class="option" bindchange="onChooseFreq" range="{{statusOptions}}">
+        {{statusOptions[status]}}
       </picker>
-      <picker class="selector" bindchange="onChooseFreq" range="{{freqOptions}}">
+      <picker class="selector" bindchange="onChooseFreq" range="{{statusOptions}}">
         <image class="selector" src="../../images/add/next.png" />
       </picker>
     </view>

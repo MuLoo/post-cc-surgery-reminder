@@ -8,9 +8,11 @@ const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
   // 预置创建集合，如果存在则自动失败跳过，自己上架时可以去掉
-  try { await db.createCollection('todo') } catch (e) { }
+  try {
+    await db.createCollection('todo')
+    await db.createCollection('daily')
+  } catch (e) { }
   const wxContext = cloud.getWXContext()
-  console.log('event ----', event, wxContext)
 
   await cloud.openapi.customerServiceMessage.send({
     touser: wxContext.OPENID,

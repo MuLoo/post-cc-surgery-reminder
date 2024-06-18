@@ -56,10 +56,10 @@
     </view>
     <view class="form-cell inline">
       <view>事件状态</view>
-      <picker class="option" bindchange="onChooseFreq" range="{{freqOptions}}">
-        {{freqOptions[freq]}}
+      <picker class="option" bindchange="onChooseFreq" range="{{statusOptions}}">
+        {{statusOptions[status]}}
       </picker>
-      <picker class="selector" bindchange="onChooseFreq" range="{{freqOptions}}">
+      <picker class="selector" bindchange="onChooseFreq" range="{{statusOptions}}">
         <image class="selector" src="../../images/add/next.png" />
       </picker>
     </view>
