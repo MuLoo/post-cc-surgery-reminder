@@ -49,7 +49,6 @@ Component({
       })
     },
     onChangeNum(event) {
-      console.log('onChangeNum', event.detail)
       this.setData({
         num: event.detail.value.replace(' ml', '')
       })

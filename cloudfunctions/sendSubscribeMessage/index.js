@@ -12,14 +12,13 @@ exports.main = async (event, context) => {
   } catch (e) { }
   try {
     const res = await db.collection(collection).where({
-      // _openid: wxContext.OPENID // 需要查询全部计划
+      // _openid: wxContext.OPENID // 需要查询全部计划, 挨个通知
       status: 0
     }).get()
     const {
       data
     } = res
     const log = [];
-    console.log('what is data', data)
     const unComplete = data.filter(item => !item.status) // 未完成的计划
     if (!data.length || !unComplete.length) return  { source: wxContext.SOURCE, message: '无数据' }
     // 如果该用户有多个计划，那么多次提醒
@@ -37,7 +36,6 @@ exports.main = async (event, context) => {
       const now = new Date();
       const nowHour = (now.getUTCHours() + 8) % 24; // 东八区时间
       const target = record.filter(item => item.value === nowHour)[0]
-      console.log('what is target', target)
       // 今时需要提醒否
       if (!target || !target.checked || !target.targetDrink) continue
       const result = await cloud.openapi.subscribeMessage.send({
@@ -48,7 +46,7 @@ exports.main = async (event, context) => {
           "data": {
             "thing1": { "value": '喝水时间到啦~' },
             "time2": { "value": `${today} ${nowHour}:00:00` },
-            "thing4": { "value": Number(target.targetDrink) },
+            "thing4": { "value": `需要饮水${Number(target.targetDrink)}毫升` },
             "thing5": { "value": `${title || "饮水计划"}` }
             },
           "templateId": templeteId,
@@ -64,25 +62,6 @@ exports.main = async (event, context) => {
       source: wxContext.SOURCE,
       log
     }
-    // const result = await cloud.openapi.subscribeMessage.send({
-    //     // "touser": event.openid || wxContext.OPENID,
-    //     "touser": 'opggK7XxXfqaMxZMBzRrukJEtGF4',
-    //     "page": 'pages/list/index',
-    //     "lang": 'zh_CN',
-    //     "data": {
-    //      "thing1": { "value": '饮水提醒云函数测试' },
-    //      "time2": { "value": new Date().toLocaleDateString() },
-    //      "thing4": { "value": 200 },
-    //      "thing5": { "value": '测试计划1' }
-    //     },
-    //     "templateId": 'awvwR6aQIE_G1qw0lvmZKQ1agT4-kX3RbDjne5zh8nQ',
-    //     "miniprogramState": 'trial'
-    // })
-    // console.log('what is the result', result)
-    // return {
-    //   source: wxContext.SOURCE,
-    //   ...result
-    // }
   } catch (err) {
     console.log('what is errror', err)
     return err

@@ -19,16 +19,27 @@ Page({
     }
   },
   testRequestSubscribe() {
-    // awvwR6aQIE_G1qw0lvmZKQ1agT4-kX3RbDjne5zh8nQ
+    const templateId = require('../../envList.js').templateId || '' // 读取 envlist 文件
+
     wx.requestSubscribeMessage({
-      tmplIds: ['awvwR6aQIE_G1qw0lvmZKQ1agT4-kX3RbDjne5zh8nQ'],
+      tmplIds: [templateId],
       success(res) {
         console.log(res)
+        if (res[templateId] === 'reject') {
+          wx.showToast({
+            title: '将无法收到提醒',
+            icon: 'error',
+            duration: 2000
+          })
+        }
       },
       fail(err) {
-        console.log(err)
+        wx.showToast({
+          title: '将无法收到提醒',
+          icon: 'error',
+          duration: 2000
+        })
       }
-
     })
   },
   updateWave() {
@@ -93,7 +104,17 @@ Page({
     })
   },
 
+  // 手动触发测试订阅消息提醒
+  // onLoad() {
+  //   getApp().sendSubscribeMessage().then(res => {
+  //     console.log(res)
+  //   })
+  // },
 
+  // 切换tab
+  onChangeTab(e) {
+    console.log('onChangeTab', e.detail)
+  },
   // 响应左划按钮事件
   async slideButtonTap(e) {
     // 得到触发事件的待办序号

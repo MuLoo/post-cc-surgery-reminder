@@ -1,5 +1,5 @@
 <wxs module="util" src="../util.wxs" />
-<van-tabs active="{{ active }}" bind:change="onChange">
+<van-tabs active="{{ active }}" bind:change="onChangeTab">
   <van-tab title="饮水计划" class="tabs-container">
     <view class="container empty" wx:if="{{todos.length === 0}}">
       <image class="background" src="../../images/list/background.png" mode="aspectFit" />
@@ -22,7 +22,6 @@
           </van-row>
           <van-row>
             <van-col span="24">
-              <!-- <van-circle value="{{ 30 }}" stroke-width="8" text="30%" /> -->
               <m-wave percent="{{percent}}" bind:update="updateWave" />
             </van-col>
           </van-row>

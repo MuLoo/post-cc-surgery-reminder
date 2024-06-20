@@ -6,7 +6,6 @@
     "van-tab": "@vant/weapp/tab/index",
     "van-tabs": "@vant/weapp/tabs/index",
     "van-dialog": "@vant/weapp/dialog/index",
-    "van-circle": "@vant/weapp/circle/index",
     "van-row": "@vant/weapp/row/index",
     "van-col": "@vant/weapp/col/index",
     "m-wave": "../../components/wave"
