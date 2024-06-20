@@ -2,12 +2,12 @@
 import { getDate, todayHasTargetWater } from '../../tools/index.js'
 
 const DefaultDrink = {
-  7: 200,
-  9: 300,
+  6: 400,
+  9: 200,
   12: 200,
-  15: 300,
+  14: 200,
+  16: 400,
   18: 200,
-  20: 300,
 }
 const initData = {
   _id: '',

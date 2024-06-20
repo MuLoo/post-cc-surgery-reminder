@@ -14,14 +14,6 @@ exports.main = async (event, context) => {
   } catch (e) { }
   const wxContext = cloud.getWXContext()
 
-  await cloud.openapi.customerServiceMessage.send({
-    touser: wxContext.OPENID,
-    msgtype: 'text',
-    text: {
-      content: '收到',
-    },
-  })
-
   // 返回当前用户的身份信息，用于数据库记录和查询
   return {
     event,

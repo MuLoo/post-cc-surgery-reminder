@@ -94,5 +94,59 @@ App({
     })
     if (openid !== "") return openid
     return fromopenid
-  }
+  },
+
+  // // 发送订阅消息
+  // // 自定义云函数
+  async sendSubscribeMessage() {
+    const openId = await this.getOpenId()
+    const cloud = await this.cloud()
+    cloud.callFunction({
+      name: 'sendSubscribeMessage',
+      data: {
+        openid: openId,
+      }
+    }).then(res => {
+      console.log('发送订阅消息成功', res)
+    }).catch(e => {
+      console.log('发送订阅消息失败', e)
+    })
+   },
+
+  //   // 发送订阅消息
+  //   // 微信云模块
+  // async sendSubscribeMessage() {
+  //   const openId = await this.getOpenId()
+  //   const cloud = await this.cloud()
+  //   cloud.callFunction({
+  //     name: 'cloudbase_module',
+  //     data: {
+  //       name: 'wx_message_send_message',
+  //       data: {
+  //         template_id: "awvwR6aQIE_G1qw0lvmZKQ1agT4-kX3RbDjne5zh8nQ", // 所需下发的订阅模板id
+  //         page: "pages/list/index", //点击模板卡片后的跳转页面，仅限本小程序内的页面。支持带参数,（示例index?foo=bar）。该字段不填则模板无跳转
+  //         touser: openId, //接收者（用户）的 openid
+  //         data:{ "thing1": { "value": '饮水提醒' }, "time2": { "value":  new Date().toLocaleDateString() },"thing4": { "value": 123 },"thing5": { "value": '测试计划1' }}, //模板内容，格式形如 { "key1": { "value": any }, "key2": { "value": any } }的object
+  //         miniprogram_state:"trial", //跳转小程序类型：developer为开发版；trial为体验版；formal为正式版；默认为正式版
+  //         lang:"zh_CN" //进入小程序查看”的语言类型，支持zh_CN(简体中文)、en_US(英文)、zh_HK(繁体中文)、zh_TW(繁体中文)，默认为zh_CN
+  //       },
+  //     },
+  //     // triggers: [
+  //     //   {
+  //     //     // name: 触发器的名字，规则见下方说明
+  //     //     "name": "myTrigger",
+  //     //     // type: 触发器类型，目前仅支持 timer (即 定时触发器)
+  //     //     "type": "timer",
+  //     //     // config: 触发器配置，在定时触发器下，config 格式为 cron 表达式，规则见下方说明
+  //     //     "config": "0 */2 * * * * *"
+  //     //   }
+  //     // ],
+  //     success: (res) => {
+  //       console.log('综合结果', res.result.result);
+  //       console.log('错误码', res.result.errcode);
+  //       console.log('错误信息', res.result.errmsg);
+  //     },
+  //   })
+  //  }
+
 })

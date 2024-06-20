@@ -1,3 +1,5 @@
+import { getDate } from '../../tools/index.js';
+
 const computedBehavior = require('miniprogram-computed').behavior
 
 Component({
@@ -74,7 +76,7 @@ Component({
         // })
         db.collection(getApp().globalData.collection_daily).where({
           _openid: openid,
-          date: new Date().toLocaleDateString()
+          date: getDate()
         }).get().then(res => {
           const {
             data
@@ -85,7 +87,7 @@ Component({
               .add({
                 data: {
                   userId: openid,
-                  date: new Date().toLocaleDateString(),
+                  date: getDate(),
                   records: [{
                     time: Number(this.data.time),
                     num: Number(this.data.num)
@@ -127,7 +129,8 @@ Component({
               })
             }
             db.collection(getApp().globalData.collection_daily).where({
-              userId: target._id
+              userId: target._id,
+              date: getDate()
             }).update({
               data: {
                 ...target,

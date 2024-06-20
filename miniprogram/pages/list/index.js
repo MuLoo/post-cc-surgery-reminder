@@ -18,7 +18,19 @@ Page({
       return (data.actualWater / data.totalWater) * 100
     }
   },
+  testRequestSubscribe() {
+    // awvwR6aQIE_G1qw0lvmZKQ1agT4-kX3RbDjne5zh8nQ
+    wx.requestSubscribeMessage({
+      tmplIds: ['awvwR6aQIE_G1qw0lvmZKQ1agT4-kX3RbDjne5zh8nQ'],
+      success(res) {
+        console.log(res)
+      },
+      fail(err) {
+        console.log(err)
+      }
 
+    })
+  },
   updateWave() {
     this.onShow()
   },
@@ -80,7 +92,6 @@ Page({
       }],
     })
   },
-
 
 
   // 响应左划按钮事件

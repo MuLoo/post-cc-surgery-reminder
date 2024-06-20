@@ -8,7 +8,7 @@
       <footer></footer>
     </view>
     <view class="container" wx:if="{{todos.length > 0}}">
-      <view class="form-group">
+      <view class="form-group" bindtap="testRequestSubscribe">
         <view wx:if="{{totalWater}}" class="form-cell header-card" style="padding: 20px;">
           <van-row style="width: 100%;">
             <van-col span="12" class="target">
