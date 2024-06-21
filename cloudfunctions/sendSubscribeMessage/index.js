@@ -1,5 +1,6 @@
 const collection = 'todo'
 const templeteId = 'awvwR6aQIE_G1qw0lvmZKQ1agT4-kX3RbDjne5zh8nQ'
+const MAX_LIMIT = 100
 const cloud = require('wx-server-sdk')
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,
@@ -8,13 +9,27 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   try {
-    await db.createCollection('todo')
+    await db.createCollection(collection)
   } catch (e) { }
   try {
-    const res = await db.collection(collection).where({
-      // _openid: wxContext.OPENID // 需要查询全部计划, 挨个通知
-      status: 0
-    }).get()
+    const totalResult = await db.collection(collection).count()
+    const { total } = totalResult
+    if (!total) return { source: wxContext.SOURCE, message: '无数据' }
+    // 在云函数中，最多一次可以获取100条记录，记录超过这个数字，就要分批次获取了
+    const batchTimes = Math.ceil(total / MAX_LIMIT)
+    const tasks = []
+    for (let i = 0; i < batchTimes; i++) {
+      const promise = db.collection(collection).where({
+        status: 0
+      }).skip(i * MAX_LIMIT).limit(MAX_LIMIT).get()
+      tasks.push(promise)
+    }
+    const res = (await Promise.all(tasks)).reduce((acc, cur) => {
+      return {
+        data: acc.data.concat(cur.data),
+        errMsg: acc.errMsg,
+      }
+    })
     const {
       data
     } = res

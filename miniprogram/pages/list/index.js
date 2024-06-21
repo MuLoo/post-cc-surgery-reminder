@@ -125,11 +125,11 @@ Page({
   },
 
   // 手动触发测试订阅消息提醒
-  // onLoad() {
-  //   getApp().sendSubscribeMessage().then(res => {
-  //     console.log(res)
-  //   })
-  // },
+  onLoad() {
+    getApp().sendSubscribeMessage().then(res => {
+      console.log(res)
+    })
+  },
 
   // 切换tab
   onChangeTab(e) {
