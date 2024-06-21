@@ -7,7 +7,7 @@
       <view class="subtitle">开始记录你的计划吧~</view>
       <footer></footer>
     </view>
-    <view class="container" wx:if="{{todos.length > 0}}">
+    <view class="container" wx:if="{{todos.length > 0}}" bindtap="slienceGetSubscribeAuth">
       <view class="form-group" bindtap="testRequestSubscribe">
         <view wx:if="{{totalWater}}" class="form-cell header-card" style="padding: 20px;">
           <van-row style="width: 100%;">

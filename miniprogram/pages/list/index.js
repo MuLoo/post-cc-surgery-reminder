@@ -18,9 +18,28 @@ Page({
       return (data.actualWater / data.totalWater) * 100
     }
   },
+  // 静默获取授权
+  // 即使用户选择了总是允许，每发送一次订阅消息，都会消耗一次授权，并非永久有效的。所以需要尽可能多的收集用户授权次数
+  slienceGetSubscribeAuth() {
+    const _this = this
+    wx.getSetting({
+      withSubscriptions: true,
+      success(res) {
+        console.log('res', res)
+        if (res.subscriptionsSetting.mainSwitch) {
+          console.log('订阅消息总开关已打开')
+          _this.testRequestSubscribe();
+        } else {
+          console.log('订阅消息总开关未打开')
+        }
+        if (res.subscriptionsSetting.itemSettings) {
+          console.log('订阅消息详细设置：', res.subscriptionsSetting.itemSettings)
+        }
+      }
+    })
+  },
   testRequestSubscribe() {
     const templateId = require('../../envList.js').templateId || '' // 读取 envlist 文件
-
     wx.requestSubscribeMessage({
       tmplIds: [templateId],
       success(res) {
@@ -34,11 +53,12 @@ Page({
         }
       },
       fail(err) {
-        wx.showToast({
-          title: '将无法收到提醒',
-          icon: 'error',
-          duration: 2000
-        })
+        console.log('订阅消息失败：', err)
+        // wx.showToast({
+        //   title: '将无法收到提醒',
+        //   icon: 'error',
+        //   duration: 2000
+        // })
       }
     })
   },
