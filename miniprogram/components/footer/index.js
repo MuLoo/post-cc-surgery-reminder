@@ -5,12 +5,21 @@ Component({
   properties: {
     addFile: Boolean,
     // 如用于添加新附件，需传入待办记录 _id 值
-    _id: String
+    _id: String,
+    type: {
+      type: String,
+      value: 'todo'
+    }
   },
   methods: {
     onClick() {
+      console.log('this.properties.type ----', this.properties.type)
       if (this.properties.addFile) {
         this.addFile()
+      } else if (this.properties.type === 'urination') {
+        wx.navigateTo({
+          url: '../../pages/add_urination/index',
+        })
       } else {
         wx.navigateTo({
           url: '../../pages/add/index',

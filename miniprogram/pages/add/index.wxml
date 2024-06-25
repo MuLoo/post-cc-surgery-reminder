@@ -69,7 +69,7 @@
     <view class="save" bindtap="saveTodo">保存</view>
   </view>
 </view> -->
-<TodoDetail data="{{undefined}}" class=".todoDetail">
+<TodoDetail data="{{undefined}}" class="todoDetail">
   <view slot="actions" class="footer">
     <view class="reset" bindtap="resetTodo">重置</view>
     <view class="save" bindtap="saveTodo">保存</view>

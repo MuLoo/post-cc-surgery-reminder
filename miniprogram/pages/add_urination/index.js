@@ -1,30 +1,13 @@
-/* 新增待办页面 */
 Page({
   getChildComponent: function () {
-    const data = this.selectComponent('.todoDetail');
+    const data = this.selectComponent('.urinationDetail');
     return data;
   },
-  // 保存编辑中待办的信息
-  data: {
-    // title: '',
-    // desc: '',
-    // files: [],
-    // fileName: '',
-    // statusOptions: ['未完成', '已完成'],
-    // totalWaterOptions: ['2000毫升', '2500毫升', '3000毫升'],
-    // intervalsReminderOptions: ['1 小时', '2 小时', '3 小时', '自定义'],
-    // status: 0, // 这三个都是index
-    // waterTotalIndex: 0,
-    // intervals: 0,
-    // customIntervalItems: Array.from({ length: 24 }, (v, i) => ({
-    //   name: `${i + 1} 点`,
-    //   value: i + 1,
-    //   checked: i >= 6 && i <= 21 ? true : false,
-    // })),
-  },
-  // 保存待办
+  data: {},
+    // 保存待办
   async saveTodo() {
     const data = this.getChildComponent().data
+    console.log('data -----', data)
     // 对输入框内容进行校验
     if (data.title === '') {
       wx.showToast({
@@ -50,8 +33,14 @@ Page({
       })
       return
     }
-    // 处理饮水间隔提醒，默认时间是从7点到22点
-
+    if (!data.urinationInput.time || !data.urinationInput.num) {
+      wx.showToast({
+        title: '请填写残余尿量',
+        icon: 'error',
+        duration: 2000
+      })
+      return
+    }
     const db = await getApp().database()
     // 在数据库中新建待办事项，并填入已编辑对信息
     db.collection(getApp().globalData.collection)
@@ -75,8 +64,9 @@ Page({
       })
   },
   // 重置所有表单项
-  resetTodo() {
-    const reset = this.getChildComponent().resetTodo
+  resetUrination() {
+    const reset = this.getChildComponent().resetUrination
     reset()
   },
+
 })

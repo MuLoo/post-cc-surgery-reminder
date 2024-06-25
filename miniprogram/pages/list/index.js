@@ -8,9 +8,13 @@ Page({
     todos: [], // 用户的所有待办事项
     pending: [], // 未完成待办事项
     finished: [], // 已完成待办事项
+    urination: [], // 用户的所有导尿计划
+    urinationPending: [], // 未完成导尿事项
+    urinationFinished: [], // 已完成导尿事项
     totalWater: null,
     actualWater: null,
-    percent: 0
+    percent: 0,
+    tabIndex: 0
   },
   behaviors: [computedBehavior],
   computed: {
@@ -66,12 +70,14 @@ Page({
     this.onShow()
   },
   onShow() {
-    // 通过云函数调用获取用户 _openId
+    if (this.data.tabIndex === 0) {
+      // 通过云函数调用获取用户 _openId
     getApp().getOpenId().then(async openid => {
       // 根据 _openId 数据，查询并展示待办列表
       const db = await getApp().database()
       db.collection(getApp().globalData.collection).where({
-        _openid: openid
+        _openid: openid,
+        type: 'todo'
       }).get().then(res => {
         const {
           data
@@ -110,6 +116,10 @@ Page({
       })
 
     })
+    } else {
+      this.getUrinationInfo()
+    }
+
     // 配置首页左划显示的星标和删除按钮
     this.setData({
       slideButtons: [{
@@ -124,16 +134,46 @@ Page({
     })
   },
 
-  // 手动触发测试订阅消息提醒
-  onLoad() {
-    getApp().sendSubscribeMessage().then(res => {
-      console.log(res)
+  async getUrinationInfo() {
+    // 根据 _openId 数据，查询并展示待办列表
+    const openid = await getApp().getOpenId()
+    const db = await getApp().database()
+    db.collection(getApp().globalData.collection).where({
+      _openid: openid,
+      type: 'urination'
+    }).get().then(res => {
+      const {
+        data
+      } = res
+      console.log('data', data, res)
+      // 存储查询到的数据
+      this.setData({
+        // data 为查询到的所有待办事项列表
+        urination: data,
+        // 通过 filter 函数，将待办事项分为未完成和已完成两部分
+        urinationPending: data.filter(todo => todo.status === 0),
+        urinationFinished: data.filter(todo => todo.status === 1)
+      })
     })
   },
+  // // 手动触发测试订阅消息提醒
+  // onLoad() {
+  //   getApp().sendSubscribeMessage().then(res => {
+  //     console.log(res)
+  //   })
+  // },
 
   // 切换tab
   onChangeTab(e) {
     console.log('onChangeTab', e.detail)
+    this.setData({
+      tabIndex: e.detail.index
+    })
+    if (e.detail.index === 0) {
+      this.onShow()
+    } else {
+      this.getUrinationInfo()
+    }
   },
   // 响应左划按钮事件
   async slideButtonTap(e) {
@@ -143,7 +183,7 @@ Page({
     } = e.detail
     // 根据序号获得待办对象
     const todoIndex = e.currentTarget.dataset.index
-    const todo = this.data.pending[todoIndex]
+    const todo = this.data.tabIndex === 0 ? this.data.pending[todoIndex] : this.data.urinationPending[todoIndex]
     const db = await getApp().database()
     // 处理星标按钮点击事件
     if (index === 0) {
@@ -157,9 +197,16 @@ Page({
       })
       // 更新本地数据，触发显示更新
       todo.star = !todo.star
-      this.setData({
-        pending: this.data.pending
-      })
+      if (this.data.tabIndex === 0) {
+        this.setData({
+          pending: this.data.pending
+        })
+      } else {
+        this.setData({
+          urinationPending: this.data.urinationPending
+        })
+
+      }
     }
     // 处理删除按钮点击事件
     if (index === 1) {
@@ -168,9 +215,10 @@ Page({
         _id: todo._id
       }).remove()
       // 更新本地数据，快速更新显示
-      this.data.pending.splice(todoIndex, 1)
+      const temp = this.data.tabIndex === 0 ? this.data.pending : this.data.urinationPending
+      temp.splice(todoIndex, 1)
       this.setData({
-        pending: this.data.pending
+        pending: temp
       })
       // 如果删除完所有事项，刷新数据，让页面显示无事项图片
       if (this.data.pending.length === 0 && this.data.finished.length === 0) {
@@ -180,6 +228,13 @@ Page({
           finished: []
         })
       }
+      if (this.data.urinationPending.length === 0 && this.data.urinationFinished.length === 0) {
+        this.setData({
+          urination: [],
+          urinationPending: [],
+          urinationFinished: []
+        })
+      }
     }
   },
 
@@ -187,7 +242,7 @@ Page({
   async finishTodo(e) {
     // 根据序号获得触发切换事件的待办
     const todoIndex = e.currentTarget.dataset.index
-    const todo = this.data.pending[todoIndex]
+    const todo = (this.data.tabIndex === 0 ? this.data.pending : this.data.urinationPending)[todoIndex]
     const db = await getApp().database()
     // 根据待办 _id，获得并更新待办事项状态
     db.collection(getApp().globalData.collection).where({
@@ -203,14 +258,16 @@ Page({
     todo.status = 1
     this.setData({
       pending: this.data.todos.filter(todo => todo.status === 0),
-      finished: this.data.todos.filter(todo => todo.status === 1)
+      finished: this.data.todos.filter(todo => todo.status === 1),
+      urinationPending: this.data.urination.filter(todo => todo.status === 0),
+      urinationFinished: this.data.urination.filter(todo => todo.status === 1)
     })
   },
 
   // 同上一函数，将待办状态设置为未完成
   async resetTodo(e) {
     const todoIndex = e.currentTarget.dataset.index
-    const todo = this.data.finished[todoIndex]
+    const todo = (this.data.tabIndex === 0 ? this.data.finished : this.data.urinationFinished)[todoIndex]
     const db = await getApp().database()
     db.collection(getApp().globalData.collection).where({
       _id: todo._id
@@ -222,7 +279,9 @@ Page({
     todo.status = 0
     this.setData({
       pending: this.data.todos.filter(todo => todo.status === 0),
-      finished: this.data.todos.filter(todo => todo.status === 1)
+      finished: this.data.todos.filter(todo => todo.status === 1),
+      urinationPending: this.data.urination.filter(todo => todo.status === 0),
+      urinationFinished: this.data.urination.filter(todo => todo.status === 1)
     })
   },
 
@@ -237,9 +296,9 @@ Page({
 
   toDetailPage(e) {
     const todoIndex = e.currentTarget.dataset.index
-    const todo = this.data.pending[todoIndex]
+    const todo = (this.data.tabIndex === 0 ? this.data.pending : this.data.urinationPending)[todoIndex]
     wx.navigateTo({
-      url: '../detail/index?id=' + todo._id,
+      url: `../${this.data.tabIndex === 0 ? 'detail' : 'edit_urination'}/index?id=` + todo._id,
     })
   },
 

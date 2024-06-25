@@ -10,6 +10,10 @@ const DefaultDrink = {
 Component({
   // 保存编辑中待办的信息
   behaviors: ['wx://component-export'],
+  options: {
+    multipleSlots: true, // 在组件定义时的选项中启用多slot支持
+    styleIsolation: 'shared',
+  },
   export() {
     return {
       data: {
@@ -21,17 +25,15 @@ Component({
         // waterTotalIndex: Number(this.data.totalWaterOptions[this.data.waterTotalIndex].slice(0, 4)), // 待办饮水总量
         // intervalsIndex: [0,1,2].includes(this.data.intervalsIndex) ? String(this.data.intervalsIndex) : 'custom',  // '1' '2' '3' '自定义'
         // reminderTime: this.generateIntervals(), // 待办提醒的时间，
-        star: false,
+        star: this.data.star,
+        type: 'todo', // 'todo' 'urination'
         frequency: this.data.intervalsIndex == 0 ? 'everyday' : this.data.intervalsIndex == 1 ? 'workday' : this.data.selectdDaily.join(','),
       },
       resetTodo: this.resetTodo.bind(this),
       setDetailData: this.setDetailData.bind(this),
     }
   },
-  options: {
-    multipleSlots: true, // 在组件定义时的选项中启用多slot支持
-    styleIsolation: 'shared',
-  },
+
   properties: {
     data: {
       type: Object,
@@ -187,40 +189,6 @@ Component({
         intervalsIndex: Number(e.detail.value),
       })
     },
-    // // 选择自定义时间
-    // customIntervalChange(e) {
-    //   console.log(e.detail.value)
-    //   const checked = e.detail.value
-    //   const temp = this.data.record.map((item, index) => {
-    //     return {
-    //       ...item,
-    //       checked: checked.indexOf(String(item.value)) !== -1,
-    //     }
-    //   })
-    //   this.setData({
-    //     record: temp,
-    //   })
-    // },
-    // // 生成提醒时间的数组
-    // generateIntervals() {
-    //   const intervals = []
-    //   if (this.data.intervalsIndex === 3) {
-
-    //     this.data.record.forEach((item, index) => {
-    //       if (item.checked) {
-    //         intervals.push(item.value)
-    //       }
-    //     })
-    //   } else {
-    //     const arr = this.data.record.slice(6, 22)
-    //     const step = this.data.intervalsIndex === 0 ? 1 : this.data.intervalsIndex === 1 ? 2 : 3
-    //     for (let i = 0; i < arr.length; i += step) {
-    //       intervals.push(arr[i].value)
-    //     }
-
-    //   }
-    //   return intervals
-    // },
       // 重置所有表单项
     resetTodo() {
       this.setData({
@@ -251,56 +219,5 @@ Component({
       })
     }
   },
-
-  // // 保存待办
-  // async saveTodo() {
-  //   // 对输入框内容进行校验
-  //   if (this.data.title === '') {
-  //     wx.showToast({
-  //       title: '事项标题未填写',
-  //       icon: 'error',
-  //       duration: 2000,
-  //     })
-  //     return
-  //   }
-  //   if (this.data.title.length > 10) {
-  //     wx.showToast({
-  //       title: '事项标题过长',
-  //       icon: 'error',
-  //       duration: 2000,
-  //     })
-  //     return
-  //   }
-  //   if (this.data.desc.length > 100) {
-  //     wx.showToast({
-  //       title: '事项描述过长',
-  //       icon: 'error',
-  //       duration: 2000,
-  //     })
-  //     return
-  //   }
-  //   // 处理饮水间隔提醒，默认时间是从7点到22点
-
-  //   const db = await getApp().database()
-  //   // 在数据库中新建待办事项，并填入已编辑对信息
-  //   db.collection(getApp().globalData.collection)
-  //     .add({
-  //       data: {
-  //         title: this.data.title, // 待办标题
-  //         desc: this.data.desc, // 待办描述
-  //         files: this.data.files, // 待办附件列表
-  //         status: Number(this.data.status), // 待办完成情况
-  //         waterTotalIndex: Number(this.data.totalWaterOptions[this.data.waterTotalIndex].slice(0, 4)), // 待办饮水总量
-  //         intervals: [0,1,2].includes(this.data.intervals) ? String(this.data.intervals + 1) : 'custom',  // '1' '2' '3' '自定义'
-  //         reminderTime: this.generateIntervals(), // 待办提醒的时间，
-  //         star: false,
-  //       },
-  //     })
-  //     .then(() => {
-  //       wx.navigateBack({
-  //         delta: 0,
-  //       })
-  //     })
-  // },
 
 })

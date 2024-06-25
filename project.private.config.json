@@ -3,5 +3,18 @@
   "projectname": "Post-CC-surgery-reminder",
   "setting": {
     "compileHotReLoad": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/add_urination/index",
+          "pathName": "pages/add_urination/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
   }
 }

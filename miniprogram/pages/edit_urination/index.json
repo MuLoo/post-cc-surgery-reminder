@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "TodoDetail": "/components/UrinationDetail"
+  },
+  "navigationBarTitleText": "编辑计划"
+}

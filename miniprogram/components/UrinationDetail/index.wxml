@@ -1,0 +1,81 @@
+<wxs module="util" src="../../util.wxs" />
+<view class="container" style="margin-bottom: 100px">
+  <view class="form-group">
+    <view class="form-cell">
+      <view class="form-cell_title">计划名称</view>
+      <input class="form-cell_input" placeholder="请输入计划名称（10字以内）" placeholder-class="form-cell_title-placeholder" bindinput="onTitleInput" value="{{title}}" />
+    </view>
+    <view class="form-cell">
+      <view class="form-cell_title">详细描述</view>
+      <input class="form-cell_input" placeholder="请输入计划的详细描述（100字以内）" placeholder-class="form-cell_title-placeholder" bindinput="onDescInput" value="{{desc}}" />
+    </view>
+  </view>
+  <view class="form-group">
+    <view class="form-cell inline">
+      <view bind:tap="urinationInputDialogVisible">
+        <van-icon name='edit' />
+        点击输入上次导尿后残余尿量
+        <view style="font-size: 14px;color: #BDBDBD;margin-top: 5px;" wx:if="{{ urinationInput.time && urinationInput.num}}">
+          记录时间:{{urinationInput.date}} {{urinationInput.time}}:00:00  残余量:{{urinationInput.num}}ml
+        </view>
+      </view>
+      <AddUrinationDialog show="{{urinationDialogShow}}" bind:onComplete="inputUrinationComplete" bind:onCancel="inputUrinationCancel" />
+    </view>
+  </view>
+  <view class="form-group">
+    <view class="form-cell inline" style="flex-direction: column;align-items: baseline;">
+      <view>计划详情</view>
+      <van-row class="header-row">
+        <van-col span="12">是否提醒</van-col>
+        <van-col span="12">提醒时间</van-col>
+      </van-row>
+      <van-row class="header-content" wx:for="{{record}}" wx:key="value">
+        <van-col span="12">
+          <van-checkbox style="margin-top: 2px;" extra-class="header-checkbox" value="{{ item.checked }}" data-extra-param="{{ item }}" bind:change="changeCheckbox"></van-checkbox>
+        </van-col>
+        <van-col span="12">
+          <view class="custom-class van-cell van-cell--borderless">{{ item.value }} 点</view>
+        </van-col>
+      </van-row>
+    </view>
+  </view>
+  <view class="form-group">
+    <view class="form-cell inline">
+      <view>提醒频率</view>
+      <picker class="option" bindchange="onChooseIntervals" range="{{intervalsReminderOptions}}">
+        {{intervalsReminderOptions[intervalsIndex]}}
+      </picker>
+      <picker class="selector" bindchange="onChooseIntervals" range="{{intervalsReminderOptions}}">
+        <image class="selector" src="../../images/add/next.png" />
+      </picker>
+    </view>
+    <view class="form-cell inline" wx:if="{{ intervalsIndex === 2}}" style="flex-direction: column;align-items: baseline;">
+      <view style="margin-bottom: 10px;">自定义时间</view>
+      <van-checkbox-group value="{{selectdDaily}}" bind:change="onChangeCustomDaily" wx:for="{{customDaily}}" wx:key="item">
+        <van-checkbox name="{{item}}">{{ item }}</van-checkbox>
+      </van-checkbox-group>
+    </view>
+  </view>
+  <!-- <view class="form-group">
+    <view class="form-cell inline">
+      <view>添加附件</view>
+      <view class="upload-text" bindtap="addFile">
+        {{(files.length === 0 ? "点击添加附件" : util.filterStr(fileName, 15))}}
+      </view>
+      <image class="upload" bindtap="addFile" src="../../images/add/next.png"></image>
+    </view>
+  </view> -->
+  <view class="form-group">
+    <view class="form-cell inline">
+      <view>事件状态</view>
+      <picker class="option" bindchange="onChooseFreq" range="{{statusOptions}}">
+        {{statusOptions[status]}}
+      </picker>
+      <picker class="selector" bindchange="onChooseFreq" range="{{statusOptions}}">
+        <image class="selector" src="../../images/add/next.png" />
+      </picker>
+    </view>
+  </view>
+  <slot name="detele"></slot>
+  <slot name="actions"></slot>
+</view>

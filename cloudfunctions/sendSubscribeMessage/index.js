@@ -43,7 +43,8 @@ exports.main = async (event, context) => {
         _openid,
         frequency,
         record,
-        title
+        title,
+        type
       } = item
       // 今天需要提醒否
       if (!todayHasTargetWater(frequency)) continue
@@ -51,17 +52,17 @@ exports.main = async (event, context) => {
       const now = new Date();
       const nowHour = (now.getUTCHours() + 8) % 24; // 东八区时间
       const target = record.filter(item => item.value === nowHour)[0]
+      const isUrination = type === 'urination'
       // 今时需要提醒否
-      if (!target || !target.checked || !target.targetDrink) continue
+      if (!target || !target.checked || (!isUrination && !target.targetDrink)) continue
       const result = await cloud.openapi.subscribeMessage.send({
-          // "touser": event.openid || wxContext.OPENID,
           "touser": _openid,
           "page": 'pages/list/index',
           "lang": 'zh_CN',
           "data": {
-            "thing1": { "value": '喝水时间到啦~' },
+            "thing1": { "value": isUrination ? '已到计划导尿时间' : '喝水时间到啦~' },
             "time2": { "value": `${today} ${nowHour}:00:00` },
-            "thing4": { "value": `需要饮水${Number(target.targetDrink)}毫升` },
+            "thing4": { "value": isUrination ? '请按计划导尿' : `需要饮水${Number(target.targetDrink)}毫升` },
             "thing5": { "value": `${title || "饮水计划"}` }
             },
           "templateId": templeteId,
@@ -78,7 +79,7 @@ exports.main = async (event, context) => {
       log
     }
   } catch (err) {
-    console.log('what is errror', err)
+    console.log('[Errror]:', err)
     return err
   }
 }

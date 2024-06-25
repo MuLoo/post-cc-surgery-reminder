@@ -1,0 +1,7 @@
+<TodoDetail class="urinationDetail">
+  <view slot="detele" class="delete" bindtap="deleteTodo">删除待办</view>
+  <view class="footer" slot="actions">
+    <view class="cancel" bindtap="cancelEdit">取消</view>
+    <view class="save" bindtap="saveTodo">保存</view>
+  </view>
+</TodoDetail>

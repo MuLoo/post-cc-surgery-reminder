@@ -1,0 +1,118 @@
+@import '../../app.wxss';
+
+.customIntervalsGroup {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.customIntervalsCheckbox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.form-cell_title {
+  margin-bottom: 10px;
+  font-size: medium;
+}
+
+.form-cell_title-placeholder {
+  font-size: small;
+  color: lightgray;
+}
+
+.upload-text {
+  margin-left: auto;
+  opacity: 0.5;
+}
+
+.upload {
+  width: 15px;
+  height: 15px;
+  margin-left: 10px;
+}
+
+.option {
+  margin-left: 15vw;
+}
+
+.selector {
+  width: 15px;
+  height: 15px;
+  margin-left: auto;
+}
+
+.footer {
+  width: 100%;
+  height: 10vh;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  border-top: lightgray solid 1px;
+  z-index: 3;
+}
+
+/* .footer view {
+  width: 50%;
+  height: 100%;
+  padding-top: 2vh;
+  text-align: center;
+} */
+
+.reset {
+  background: white;
+}
+
+.save {
+  color: white;
+  background: #353535;
+}
+
+.header-row {
+  width:100%;
+  margin: 20px 0 10px;
+}
+.header-content {
+  width:100%;
+  margin-top: 5px;
+  padding: var(--cell-vertical-padding,10px) 0;
+}
+.header-row van-col {
+  color: grey;
+  font-size: 15px;
+  text-align: center;
+}
+.header-row van-col view {
+  text-align: center;
+}
+.header-content van-col van-checkbox view {
+  justify-content: center;
+}
+.header-content .van-cell {
+  /* padding: 0;
+  border-bottom: 1px solid #f7f7f7; */
+  padding: 0;
+  text-align: center;
+}
+.header-content .van-checkbox {
+  justify-content: center;
+}
+
+.header-content .van-cell .van-field__body input {
+  text-align: center;
+}
+
+.input-has-value input {
+  font-size: 18px;
+}
+
+.ml {
+  display:inline-block;
+  font-size: 14px;
+  color: lightgray;
+  vertical-align: super;
+  height: 24px;
+}
+
+van-checkbox-group {
+  padding: 10px 0;
+}
