@@ -6,6 +6,7 @@ App({
       // 用于存储待办记录的集合名称
       collection: 'todo',
       collection_daily: 'daily',
+      collection_urination_daily: 'daily_urination',
       collection_urination: 'urination',
       // 最大文件上传数量
       fileLimit: 2

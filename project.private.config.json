@@ -13,6 +13,20 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "首页带参数",
+          "pathName": "pages/list/index",
+          "query": "tab=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/add_urination/index",
+          "pathName": "pages/add_urination/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

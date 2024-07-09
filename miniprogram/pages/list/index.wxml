@@ -1,5 +1,5 @@
 <wxs module="util" src="../util.wxs" />
-<van-tabs active="{{ active }}" bind:change="onChangeTab">
+<van-tabs active="{{ tabIndex }}" bind:change="onChangeTab">
   <van-tab title="饮水计划" class="tabs-container">
     <view class="container empty" wx:if="{{todos.length === 0}}">
       <image class="background" src="../../images/list/background.png" mode="aspectFit" />
@@ -74,6 +74,27 @@
       <footer type="urination"></footer>
     </view>
     <view class="container" wx:if="{{urination.length > 0}}" bindtap="slienceGetSubscribeAuth">
+      <view class="form-group">
+        <view class="form-cell header-card header-card-urination" style="padding: 20px;">
+          <van-row>
+            <van-col span="24">
+              <view class="subtitle">间接导尿</view>
+            </van-col>
+          </van-row>
+          <van-row>
+            <van-col span="12" class="u-title">{{ indirectNum}}</van-col>
+            <van-col span="12" class="u-title u-title-1">{{indirectTotal}} ml</van-col>
+          </van-row>
+          <van-row span="24" style="margin-top: 20px;border-top: 1px solid lightgrey; padding-top: 10px;">
+            <view class="subtitle">自主排尿</view>
+          </van-row>
+          <van-row>
+            <van-col span="12" class="u-title">{{selfNum}}</van-col>
+            <van-col span="12" class="u-title u-title-1">{{selfTotal}} ml</van-col>
+          </van-row>
+          <quickly-add-urination bind:update="updateUrinationInfo" />
+        </view>
+      </view>
       <view class="form-group_label">
         未完成
         <mp-badge content="{{urinationPending.length}}" style="margin-left: 5px;" />

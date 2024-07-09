@@ -92,6 +92,7 @@ Page({
           _id: this.data._id,
           title: todo.title,
           desc: todo.desc,
+          buyItemsDesc: todo.buyItemsDesc,
           files: todo.files,
           fileName,
           status: todo.status,

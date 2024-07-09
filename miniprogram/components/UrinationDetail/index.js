@@ -16,6 +16,8 @@ Component({
         record: this.data.record,
         star: this.data.star,
         type: 'urination',
+        memo: this.data.memo,
+        buyItemsDesc: this.data.buyItemsDesc,
         frequency: this.data.intervalsIndex == 0 ? 'everyday' : this.data.intervalsIndex == 1 ? 'workday' : this.data.selectdDaily.join(','),
         urinationInput: this.data.urinationInput
 
@@ -39,6 +41,8 @@ Component({
     urinationDialogShow: false,
     title: '',
     desc: '',
+    buyItemsDesc: '',
+    memo: '',
     // files: [],
     // fileName: '',
     statusOptions: ['未完成', '已完成'],
@@ -55,9 +59,26 @@ Component({
       time: '',
       num: '',
       date: getDate()
-    }
+    },
+    urinationTypeOptions: ['间导', '自主'],
+    typeDefaultIndex: 0, // 默认是间导
   },
   methods: {
+    onBuyItemsInput(event) {
+      this.setData({
+        buyItemsDesc: event.detail.value
+      })
+    },
+    onMemoInput(event) {
+      this.setData({
+        memo: event.detail.value
+      })
+    },
+    onChangeType(event) {
+      this.setData({
+        typeDefaultIndex: event.detail.value === '间导' ? 0 : 1
+      })
+    },
     setUrinationData(data) {
       this.setData({
         ...data
@@ -154,9 +175,13 @@ Component({
         urinationDialogShow: false,
         title: '',
         desc: '',
+        buyItemsDesc: '',
+        memo: '',
         // files: [],
         // fileName: '',
         statusOptions: ['未完成', '已完成'],
+        urinationTypeOptions: ['间导', '自主'],
+        typeDefaultIndex: 0, // 默认是间导
         intervalsReminderOptions: ['每天', '工作日', '自定义'],
         customDaily: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
         selectdDaily: ['星期一', '星期二', '星期三', '星期四', '星期五'],

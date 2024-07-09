@@ -1,0 +1,14 @@
+<view class="delete" bind:tap="recordUrination">记一笔</view>
+<van-dialog use-slot title="导尿记录" show="{{ show }}" show-cancel-button bind:confirm="save" bind:close="onClose">
+  <van-row>
+    <van-col span="8">
+      <van-picker default-index="{{typeDefaultIndex}}" columns="{{ typeColumns }}" bind:change="onChangeType" />
+    </van-col>
+    <van-col span="8">
+      <van-picker default-index="{{timeDefaultIndex}}" columns="{{ timeColumns }}" bind:change="onChangeTime" />
+    </van-col>
+    <van-col span="8">
+      <van-picker default-index="{{numDefaultIndex}}" columns="{{ numberColumns }}" bind:change="onChangeNum" />
+    </van-col>
+  </van-row>
+</van-dialog>

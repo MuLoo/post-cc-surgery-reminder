@@ -19,6 +19,7 @@ Component({
       data: {
         title: this.data.title, // 待办标题
         desc: this.data.desc, // 待办描述
+        buyItemsDesc: this.data.buyItemsDesc, // 待办购买清单
         files: this.data.files, // 待办附件列表
         status: Number(this.data.status), // 待办完成情况
         record: this.data.record,
@@ -48,6 +49,7 @@ Component({
     editMode: false,
     title: '',
     desc: '',
+    buyItemsDesc: '',
     files: [],
     fileName: '',
     statusOptions: ['未完成', '已完成'],
@@ -129,6 +131,11 @@ Component({
         desc: e.detail.value,
       })
     },
+    onBuyItemsInput(e) {
+      this.setData({
+        buyItemsDesc: e.detail.value,
+      })
+    },
     // 设计计划提醒的时间
     onChangeCustomDaily(e) {
       this.setData({
@@ -195,6 +202,7 @@ Component({
         editMode: false,
         title: '',
         desc: '',
+        buyItemsDesc: '',
         files: [],
         fileName: '',
         statusOptions: ['未完成', '已完成'],

@@ -14,7 +14,11 @@ Page({
     totalWater: null,
     actualWater: null,
     percent: 0,
-    tabIndex: 0
+    tabIndex: 0,
+    indirectNum: 0, // z间导次数
+    indirectTotal:0, // 间导总量
+    selfNum:0, // 自主次数
+    selfTotal:0 // 自主总量
   },
   behaviors: [computedBehavior],
   computed: {
@@ -43,6 +47,7 @@ Page({
     })
   },
   testRequestSubscribe() {
+    // !FIXME
     const templateId = require('../../envList.js').templateId || '' // 读取 envlist 文件
     wx.requestSubscribeMessage({
       tmplIds: [templateId],
@@ -58,11 +63,6 @@ Page({
       },
       fail(err) {
         console.log('订阅消息失败：', err)
-        // wx.showToast({
-        //   title: '将无法收到提醒',
-        //   icon: 'error',
-        //   duration: 2000
-        // })
       }
     })
   },
@@ -118,6 +118,7 @@ Page({
     })
     } else {
       this.getUrinationInfo()
+      this.getUrinationInfoDashboard()
     }
 
     // 配置首页左划显示的星标和删除按钮
@@ -156,12 +157,42 @@ Page({
       })
     })
   },
-  // // 手动触发测试订阅消息提醒
-  // onLoad() {
-  //   getApp().sendSubscribeMessage().then(res => {
-  //     console.log(res)
-  //   })
-  // },
+  // 获取今天导尿次数和总量
+  async getUrinationInfoDashboard() {
+    const openid = await getApp().getOpenId()
+    const db = await getApp().database()
+    db.collection(getApp().globalData.collection_urination_daily).where({
+      userId: openid,
+      date: getDate()
+    }).get().then(res => {
+      console.log('res ------', res)
+      const {
+        data: [target, ...rest]
+      } = res
+      const records = target.records || []
+      // 分出间导和自主的次数和总量
+      const indirectNum = records.filter(item => item.type === 0).length
+      const indirectTotal = records.filter(item => item.type === 0).reduce((acc, cur) => acc + cur.num, 0)
+      const selfNum = records.filter(item => item.type === 1).length
+      const selfTotal = records.filter(item => item.type === 1).reduce((acc, cur) => acc + cur.num, 0)
+      this.setData({
+        indirectNum,
+        indirectTotal,
+        selfNum,
+        selfTotal
+      })
+    })
+  },
+
+  onLoad(options) {
+    this.setData({
+      tabIndex: Number(options.tab || 0)
+    })
+    // 手动触发测试订阅消息提醒
+    // getApp().sendSubscribeMessage().then(res => {
+    //   console.log(res)
+    // })
+  },
 
   // 切换tab
   onChangeTab(e) {
@@ -306,5 +337,10 @@ Page({
     wx.navigateTo({
       url: '../../pages/add/index',
     })
+  },
+
+  updateUrinationInfo() {
+    console.log('updateUrinationInfo')
+    this.getUrinationInfoDashboard()
   }
 })

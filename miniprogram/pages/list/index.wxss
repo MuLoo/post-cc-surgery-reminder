@@ -26,6 +26,20 @@
   margin-top: 10px;
 }
 
+.header-card-urination van-row {
+  width: 100%;
+  line-height: 1.2;
+}
+
+.header-card-urination .subtitle {
+  font-size: 17px;
+  font-weight: bold;
+  padding-left: 26px;
+  margin-bottom: 30px;
+}
+
+
+
 .van-tabs {
   height: 100vh;
   overflow: scroll;
@@ -153,4 +167,30 @@
   font-weight: 400;
   color: lightgray;
   display: inline-block;
+}
+
+
+.u-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #666;
+
+}
+.u-title view {
+  position: relative;
+}
+.u-title view::before {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  content: '次数';
+  color: #BDBDBD;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.u-title-1 view::before {
+  content: '总量'
 }

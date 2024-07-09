@@ -8,6 +8,7 @@
     "van-dialog": "@vant/weapp/dialog/index",
     "van-row": "@vant/weapp/row/index",
     "van-col": "@vant/weapp/col/index",
-    "m-wave": "../../components/wave"
+    "m-wave": "../../components/wave",
+    "quickly-add-urination": "../../components/QuicklyAddUrination/index"
   }
 }
