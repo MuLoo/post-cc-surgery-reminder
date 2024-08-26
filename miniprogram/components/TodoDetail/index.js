@@ -2,7 +2,7 @@
 const DefaultDrink = {
   6: 400,
   9: 200,
-  12: 200,
+  12: 400,
   14: 200,
   16: 400,
   18: 200,
@@ -19,7 +19,8 @@ Component({
       data: {
         title: this.data.title, // 待办标题
         desc: this.data.desc, // 待办描述
-        buyItemsDesc: this.data.buyItemsDesc, // 待办购买清单
+        // buyItemsDesc: this.data.buyItemsDesc, // 待办购买清单
+        buyItems: this.data.buyItems,
         files: this.data.files, // 待办附件列表
         status: Number(this.data.status), // 待办完成情况
         record: this.data.record,
@@ -49,7 +50,9 @@ Component({
     editMode: false,
     title: '',
     desc: '',
-    buyItemsDesc: '',
+    // buyItemsDesc: '',
+    buyItems: ['catheter', 'tissue', 'mirror'],
+    star: false,
     files: [],
     fileName: '',
     statusOptions: ['未完成', '已完成'],
@@ -131,9 +134,14 @@ Component({
         desc: e.detail.value,
       })
     },
-    onBuyItemsInput(e) {
+    // onBuyItemsInput(e) {
+    //   this.setData({
+    //     buyItemsDesc: e.detail.value,
+    //   })
+    // },
+    onBuyItemsInputChange(event) {
       this.setData({
-        buyItemsDesc: e.detail.value,
+        buyItems: event.detail
       })
     },
     // 设计计划提醒的时间
@@ -202,7 +210,7 @@ Component({
         editMode: false,
         title: '',
         desc: '',
-        buyItemsDesc: '',
+        // buyItemsDesc: '',
         files: [],
         fileName: '',
         statusOptions: ['未完成', '已完成'],

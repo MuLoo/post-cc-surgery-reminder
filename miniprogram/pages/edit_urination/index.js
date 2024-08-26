@@ -1,10 +1,13 @@
 const initData = {
-  editMode: true,
+  readonly: false, // 只读，无法编辑、修改
+  editMode: true, // 是新建还是编辑已有
   urinationDialogShow: false,
   title: '',
   desc: '',
-  buyItemsDesc: '',
+  // buyItemsDesc: '',
   memo: '',
+  buyItems: ['catheter', 'tissue', 'mirror'],
+  star: false,
   statusOptions: ['未完成', '已完成'],
   intervalsReminderOptions: ['每天', '工作日', '自定义'],
   customDaily: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
@@ -35,7 +38,8 @@ Page({
     // 根据上一页传来的 _id 值更新表单数据
     if (options.id !== undefined) {
       this.setData({
-        _id: options.id
+        _id: options.id,
+        readonly: options.readonly === 'true'
       })
       const db = await getApp().database()
       // 根据待办 _id 加载信息
@@ -59,14 +63,16 @@ Page({
           _id: this.data._id,
           title: urination.title,
           desc: urination.desc,
-          buyItemsDesc: urination.buyItemsDesc,
+          // buyItemsDesc: urination.buyItemsDesc,
+          buyItems: urination.buyItems || [],
           memo: urination.memo,
           status: urination.status,
           record: urination.record,
           intervalsIndex: urination.frequency === 'everyday' ? 0 : urination.frequency === 'workday' ? 1 : 2,
           selectdDaily: urination.frequency !== 'everyday' && urination.frequency !== 'workday' ? urination.frequency.split(',') : [],
           editMode: true,
-          star: urination.star,
+          readonly: options.readonly === 'true',
+          star: urination.star || false,
         })
       })
     }
@@ -92,6 +98,11 @@ Page({
   // saveTodo
   // 保存待办信息
   async saveTodo() {
+    if (this.data.readonly) return wx.showToast({
+      title: '只读模式无法编辑',
+      icon: 'none',
+      duration: 2000
+    })
     const data = this.getChildComponent().data
     // 对输入框内容进行校验
     if (data.title === '') {
@@ -135,6 +146,8 @@ Page({
     // }).filter(item => !!item);
 
     // 校验通过后，根据待办 _id，更新计划
+    data.updated_at = new Date().getTime()
+
     db.collection(getApp().globalData.collection).where({
       _id: this.data._id
     }).update({
@@ -155,76 +168,5 @@ Page({
         delta: 0,
       })
     })
-
-    // 更新每日饮水记录
-    // getApp().getOpenId().then(async openid => {
-    //   db.collection(getApp().globalData.collection_daily).where({
-    //     _openid: openid,
-    //     date: getDate()
-    //   }).get().then(res => {
-    //     const { data } = res;
-    //     if (!data.length) {
-    //       // 需要新建
-    //       db.collection(getApp().globalData.collection_daily)
-    //         .add({
-    //           data: {
-    //             userId: openid,
-    //             date: new Date().toLocaleDateString(),
-    //             records: dailyRecords
-    //           }
-    //         })
-    //         .then(() => {
-    //           wx.showToast({
-    //             title: '保存成功',
-    //             icon: 'success'
-    //           })
-    //           this.setData({
-    //             show: false
-    //           })
-    //         }).catch(err => {
-    //           console.log(err)
-    //           wx.showToast({
-    //             title: '保存失败，请稍后重试',
-    //             icon: 'error',
-    //             duration: 2000
-    //           })
-    //         })
-    //     } else {
-    //       // 已经存在
-    //       const target = data[0]
-    //       delete target._openid
-    //       delete target._id
-    //       const records = target.records || []
-    //       dailyRecords.forEach(item => {
-    //         const recordItem = records.find(r => r.time === item.time);
-    //         if (recordItem) {
-    //           recordItem.num = item.num;
-    //         } else {
-    //           records.push(item);
-    //         }
-    //       })
-    //       db.collection(getApp().globalData.collection_daily).where({
-    //         userId: target._id
-    //       }).update({
-    //         data: {
-    //           ...target,
-    //           records
-    //         }
-    //       }).then(() => {
-    //         // wx.showToast({
-    //         //   title: '保存成功',
-    //         //   icon: 'success'
-    //         // })
-    //       }).catch(err => {
-    //         console.log(err)
-    //         wx.showToast({
-    //           title: '保存失败，请稍后重试',
-    //           icon: 'error',
-    //           duration: 2000
-    //         })
-    //       })
-    //     }
-    //   })
-    // })
   }
 })

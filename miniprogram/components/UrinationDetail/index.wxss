@@ -14,6 +14,9 @@
   margin-bottom: 10px;
   font-size: medium;
 }
+.disabled {
+  color: gray
+}
 
 .form-cell_title-placeholder {
   font-size: small;
@@ -103,6 +106,7 @@
 
 .input-has-value input {
   font-size: 18px;
+  color: lightgray;
 }
 
 .ml {
@@ -115,4 +119,14 @@
 
 van-checkbox-group {
   padding: 10px 0;
+}
+
+.van-checkbox-group .van-checkbox {
+  padding: 10px;
+}
+
+.description {
+  font-size: 15px;
+  color: grey;
+  margin: 7px 0;
 }

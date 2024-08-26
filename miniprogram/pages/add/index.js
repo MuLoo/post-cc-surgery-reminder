@@ -51,7 +51,8 @@ Page({
       return
     }
     // 处理饮水间隔提醒，默认时间是从7点到22点
-
+    data.created_at = new Date().getTime()
+    data.updated_at = new Date().getTime()
     const db = await getApp().database()
     // 在数据库中新建待办事项，并填入已编辑对信息
     db.collection(getApp().globalData.collection)

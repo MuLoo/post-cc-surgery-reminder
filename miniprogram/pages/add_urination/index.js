@@ -42,6 +42,8 @@ Page({
       return
     }
     const db = await getApp().database()
+    data.created_at = new Date().getTime()
+    data.updated_at = new Date().getTime()
     // 在数据库中新建待办事项，并填入已编辑对信息
     db.collection(getApp().globalData.collection)
       .add({

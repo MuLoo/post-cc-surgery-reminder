@@ -77,20 +77,18 @@
       <view class="form-group">
         <view class="form-cell header-card header-card-urination" style="padding: 20px;">
           <van-row>
-            <van-col span="24">
-              <view class="subtitle">间接导尿</view>
-            </van-col>
-          </van-row>
-          <van-row>
-            <van-col span="12" class="u-title">{{ indirectNum}}</van-col>
-            <van-col span="12" class="u-title u-title-1">{{indirectTotal}} ml</van-col>
-          </van-row>
-          <van-row span="24" style="margin-top: 20px;border-top: 1px solid lightgrey; padding-top: 10px;">
             <view class="subtitle">自主排尿</view>
           </van-row>
           <van-row>
             <van-col span="12" class="u-title">{{selfNum}}</van-col>
             <van-col span="12" class="u-title u-title-1">{{selfTotal}} ml</van-col>
+          </van-row>
+          <van-row span="24" style="margin-top: 20px;border-top: 1px solid lightgrey; padding-top: 10px;">
+            <view class="subtitle">间歇导尿</view>
+          </van-row>
+          <van-row>
+            <van-col span="12" class="u-title">{{ indirectNum}}</van-col>
+            <van-col span="12" class="u-title u-title-1">{{indirectTotal}} ml</van-col>
           </van-row>
           <quickly-add-urination bind:update="updateUrinationInfo" />
         </view>
@@ -118,10 +116,10 @@
         已完成
         <mp-badge content="{{urinationFinished.length}}" style="margin-left: 5px;" />
       </view>
-      <view class="form-group" wx:if="{{urinationFinished.length > 0}}">
+      <view class="form-group" style="margin-bottom: 80px;" wx:if="{{urinationFinished.length > 0}}">
         <view class="form-cell" wx:for="{{urinationFinished}}" wx:key="index">
           <mp-slideview buttons="{{[]}}" data-index='{{index}}' bindbuttontap="slideButtonTap">
-            <view class="slide">
+            <view class="slide" data-index="{{index}}" bindtap="toViewDetailPage">
               <image class="checkbox" data-index='{{index}}' src="../../images/list/finished.png" bindtap="resetTodo" />
               <view class="todo-info">
                 <view class="todo-info_title done">{{util.filterStr(item.title, 10)}}</view>

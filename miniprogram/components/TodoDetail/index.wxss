@@ -110,3 +110,9 @@
 .van-checkbox-group .van-checkbox {
   padding: 10px;
 }
+
+.description {
+  font-size: 15px;
+  color: grey;
+  margin: 7px 0;
+}

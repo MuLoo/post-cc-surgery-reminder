@@ -30,7 +30,6 @@ Component({
           _openid: openid,
           date: getDate()
         }).get().then(res => {
-          console.log('res ------', res)
           const { data } = res
           if (!data.length) {
             // 新建

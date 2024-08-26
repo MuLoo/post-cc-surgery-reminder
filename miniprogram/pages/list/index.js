@@ -33,7 +33,6 @@ Page({
     wx.getSetting({
       withSubscriptions: true,
       success(res) {
-        console.log('res', res)
         if (res.subscriptionsSetting.mainSwitch) {
           console.log('订阅消息总开关已打开')
           _this.testRequestSubscribe();
@@ -52,7 +51,6 @@ Page({
     wx.requestSubscribeMessage({
       tmplIds: [templateId],
       success(res) {
-        console.log(res)
         if (res[templateId] === 'reject') {
           wx.showToast({
             title: '将无法收到提醒',
@@ -75,7 +73,7 @@ Page({
     getApp().getOpenId().then(async openid => {
       // 根据 _openId 数据，查询并展示待办列表
       const db = await getApp().database()
-      db.collection(getApp().globalData.collection).where({
+      db.collection(getApp().globalData.collection).orderBy('created_at', 'desc').where({
         _openid: openid,
         type: 'todo'
       }).get().then(res => {
@@ -134,7 +132,7 @@ Page({
       }],
     })
   },
-
+  // 获取导尿计划
   async getUrinationInfo() {
     // 根据 _openId 数据，查询并展示待办列表
     const openid = await getApp().getOpenId()
@@ -146,7 +144,6 @@ Page({
       const {
         data
       } = res
-      console.log('data', data, res)
       // 存储查询到的数据
       this.setData({
         // data 为查询到的所有待办事项列表
@@ -165,16 +162,15 @@ Page({
       userId: openid,
       date: getDate()
     }).get().then(res => {
-      console.log('res ------', res)
       const {
-        data: [target, ...rest]
+        data: [target = {}, ...rest]
       } = res
       const records = target.records || []
       // 分出间导和自主的次数和总量
       const indirectNum = records.filter(item => item.type === 0).length
-      const indirectTotal = records.filter(item => item.type === 0).reduce((acc, cur) => acc + cur.num, 0)
+      const indirectTotal = records.filter(item => item.type === 0).reduce((acc, cur) => acc + Number(cur.num), 0)
       const selfNum = records.filter(item => item.type === 1).length
-      const selfTotal = records.filter(item => item.type === 1).reduce((acc, cur) => acc + cur.num, 0)
+      const selfTotal = records.filter(item => item.type === 1).reduce((acc, cur) => acc + Number(cur.num), 0)
       this.setData({
         indirectNum,
         indirectTotal,
@@ -196,13 +192,13 @@ Page({
 
   // 切换tab
   onChangeTab(e) {
-    console.log('onChangeTab', e.detail)
     this.setData({
       tabIndex: e.detail.index
     })
     if (e.detail.index === 0) {
       this.onShow()
     } else {
+      this.getUrinationInfoDashboard()
       this.getUrinationInfo()
     }
   },
@@ -248,9 +244,15 @@ Page({
       // 更新本地数据，快速更新显示
       const temp = this.data.tabIndex === 0 ? this.data.pending : this.data.urinationPending
       temp.splice(todoIndex, 1)
-      this.setData({
-        pending: temp
-      })
+      if (this.data.tabIndex === 0) {
+        this.setData({
+          pending: temp
+        })
+      } else {
+        this.setData({
+          urinationPending: temp
+        })
+      }
       // 如果删除完所有事项，刷新数据，让页面显示无事项图片
       if (this.data.pending.length === 0 && this.data.finished.length === 0) {
         this.setData({
@@ -328,8 +330,19 @@ Page({
   toDetailPage(e) {
     const todoIndex = e.currentTarget.dataset.index
     const todo = (this.data.tabIndex === 0 ? this.data.pending : this.data.urinationPending)[todoIndex]
+    // wx.navigateTo({
+    //   url: `../${this.data.tabIndex === 0 ? 'detail' : 'edit_urination'}/index?id=` + todo._id,
+    // })
     wx.navigateTo({
-      url: `../${this.data.tabIndex === 0 ? 'detail' : 'edit_urination'}/index?id=` + todo._id,
+      url: `../${this.data.tabIndex === 0 ? 'edit' : 'edit_urination'}/index?id=` + todo._id,
+    })
+  },
+  // 只读模式查看详情页，无法编辑
+  toViewDetailPage(e) {
+    const todoIndex = e.currentTarget.dataset.index
+    const todo = (this.data.tabIndex === 0 ? this.data.finished : this.data.urinationFinished)[todoIndex]
+    wx.navigateTo({
+      url: `../${this.data.tabIndex === 0 ? 'detail' : 'edit_urination'}/index?id=` + todo._id + '&readonly=true',
     })
   },
 
@@ -340,7 +353,6 @@ Page({
   },
 
   updateUrinationInfo() {
-    console.log('updateUrinationInfo')
     this.getUrinationInfoDashboard()
   }
 })

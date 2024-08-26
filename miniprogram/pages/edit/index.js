@@ -4,7 +4,7 @@ import { getDate, todayHasTargetWater } from '../../tools/index.js'
 const DefaultDrink = {
   6: 400,
   9: 200,
-  12: 200,
+  12: 400,
   14: 200,
   16: 400,
   18: 200,
@@ -16,6 +16,8 @@ const initData = {
   files: [],
   fileName: '',
   statusOptions: ['未完成', '已完成'],
+  buyItems: ['catheter', 'tissue', 'mirror'],
+  star: false,
   // totalWaterOptions: ['2000毫升', '2500毫升', '3000毫升'],
   // intervalsReminderOptions: ['1 小时', '2 小时', '3 小时', '自定义'],
   status: 0, // 这三个都是index
@@ -92,14 +94,16 @@ Page({
           _id: this.data._id,
           title: todo.title,
           desc: todo.desc,
-          buyItemsDesc: todo.buyItemsDesc,
+          // buyItemsDesc: todo.buyItemsDesc,
+          buyItems: todo.buyItems || [],
           files: todo.files,
           fileName,
           status: todo.status,
           record: record,
           intervalsIndex: todo.frequency === 'everyday' ? 0 : todo.frequency === 'workday' ? 1 : 2,
           selectdDaily: todo.frequency !== 'everyday' && todo.frequency !== 'workday' ? todo.frequency.split(',') : [],
-          editMode: true
+          editMode: true,
+          star: todo.star || false
         })
       })
     }
@@ -169,6 +173,7 @@ Page({
     }).filter(item => !!item);
 
     // 校验通过后，根据待办 _id，更新计划
+    data.updated_at = new Date().getTime()
     db.collection(getApp().globalData.collection).where({
       _id: this.data._id
     }).update({

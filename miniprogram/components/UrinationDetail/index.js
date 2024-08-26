@@ -15,9 +15,10 @@ Component({
         status: this.data.status, // 待办状态
         record: this.data.record,
         star: this.data.star,
+        buyItems: this.data.buyItems,
         type: 'urination',
         memo: this.data.memo,
-        buyItemsDesc: this.data.buyItemsDesc,
+        // buyItemsDesc: this.data.buyItemsDesc,
         frequency: this.data.intervalsIndex == 0 ? 'everyday' : this.data.intervalsIndex == 1 ? 'workday' : this.data.selectdDaily.join(','),
         urinationInput: this.data.urinationInput
 
@@ -37,11 +38,14 @@ Component({
     }
   },
   data: {
+    readonly: false,
     editMode: false,
     urinationDialogShow: false,
     title: '',
     desc: '',
-    buyItemsDesc: '',
+    // buyItemsDesc: '',
+    buyItems: ['catheter', 'tissue', 'mirror'],
+    star: false,
     memo: '',
     // files: [],
     // fileName: '',
@@ -64,9 +68,14 @@ Component({
     typeDefaultIndex: 0, // 默认是间导
   },
   methods: {
-    onBuyItemsInput(event) {
+    // onBuyItemsInput(event) {
+    //   this.setData({
+    //     buyItemsDesc: event.detail.value
+    //   })
+    // },
+    onBuyItemsInputChange(event) {
       this.setData({
-        buyItemsDesc: event.detail.value
+        buyItems: event.detail
       })
     },
     onMemoInput(event) {
@@ -95,6 +104,11 @@ Component({
       })
     },
     changeCheckbox(event) {
+      if (this.data.readonly) return wx.showToast({
+        title: '只读模式下无法编辑',
+        icon: 'none',
+        duration: 2000,
+      })
       if (!event.target.dataset.extraParam) {
         return
       }
@@ -112,6 +126,11 @@ Component({
     // 选择计划提醒频率
     onChooseIntervals(e) {
       console.log(e.detail.value)
+      if (this.data.readonly) return wx.showToast({
+        title: '只读模式无法编辑',
+        icon: 'none',
+        duration: 2000
+      })
       this.setData({
         intervalsIndex: Number(e.detail.value),
       })
@@ -169,13 +188,25 @@ Component({
       if ((scheduleHour - startHour) % interval === 0) return true
       return false
     },
+    // 完成状态
+    onChooseFreq(e) {
+      if (this.data.readonly) return wx.showToast({
+        title: '只读模式无法编辑',
+        icon: 'none',
+        duration: 2000
+      })
+      this.setData({
+        status: e.detail.value,
+      })
+    },
     resetUrination() {
       this.setData({
         editMode: false,
         urinationDialogShow: false,
         title: '',
         desc: '',
-        buyItemsDesc: '',
+        // buyItemsDesc: '',
+        buyItems: ['catheter', 'tissue', 'mirror'],
         memo: '',
         // files: [],
         // fileName: '',
