@@ -137,7 +137,7 @@ Page({
     // 根据 _openId 数据，查询并展示待办列表
     const openid = await getApp().getOpenId()
     const db = await getApp().database()
-    db.collection(getApp().globalData.collection).where({
+    db.collection(getApp().globalData.collection).orderBy('created_at', 'desc').where({
       _openid: openid,
       type: 'urination'
     }).get().then(res => {
